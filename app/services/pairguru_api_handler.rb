@@ -8,26 +8,22 @@ class PairguruApiHandler
   end
 
   def cover
-    "#{POSTER_URI}/#{call_api['attributes']['poster']}"
+    "#{POSTER_URI}/#{api_response['attributes']['poster']}"
   end
 
   def rating
-    call_api["attributes"]["rating"]
+    api_response["attributes"]["rating"]
   end
 
   def plot
-    call_api["attributes"]["plot"]
+    api_response["attributes"]["plot"]
   end
 
   private
 
   # API call memoization to make sure we call API once per movie
-  def call_api
-    if @response.nil?
-      @response = self.class.get(movie_url).parsed_response["data"]
-    else
-      @response
-    end
+  def api_response
+    @response ||= self.class.get(movie_url).parsed_response["data"]
   end
 
   def movie_url

@@ -7,10 +7,12 @@ gem "bootstrap-sass"
 gem "devise"
 gem "draper"
 gem "haml-rails"
+gem "httparty"
 gem "jquery-rails"
 gem "sass-rails"
 gem "sqlite3"
 gem "uglifier"
+gem "webmock"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
@@ -27,6 +29,7 @@ group :development do
 end
 
 group :development, :test do
+  gem "byebug"
   gem "capybara"
   gem "factory_bot_rails"
   gem "faker"

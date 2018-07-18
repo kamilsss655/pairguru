@@ -1,9 +1,19 @@
 class MovieDecorator < Draper::Decorator
   delegate_all
 
+  def extra_info
+    @extra_info ||= PairguruApiHandler.new(object.title)
+  end
+
   def cover
-    "http://lorempixel.com/100/150/" +
-      %w[abstract nightlife transport].sample +
-      "?a=" + SecureRandom.uuid
+    extra_info.cover
+  end
+
+  def plot
+    extra_info.plot
+  end
+
+  def rating
+    extra_info.rating
   end
 end

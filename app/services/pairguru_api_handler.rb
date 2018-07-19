@@ -1,6 +1,7 @@
 class PairguruApiHandler
   include HTTParty
   attr_reader :movie_title
+  default_timeout 1
   base_uri "https://pairguru-api.herokuapp.com/api/v1/movies"
   COVER_URI = "https://pairguru-api.herokuapp.com".freeze
 
@@ -26,7 +27,19 @@ class PairguruApiHandler
 
   # API call memoization to make sure we call API once per movie
   def api_response
-    @api_response ||= self.class.get(movie_url).parsed_response
+    @api_response ||= handle_errors { api_call.parsed_response }
+  end
+
+  def api_call
+    self.class.get(movie_url)
+  end
+
+  def handle_errors
+    yield
+  rescue StandardError => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace.join("\n")
+    {}
   end
 
   def movie_url

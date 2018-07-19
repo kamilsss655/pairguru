@@ -1,19 +1,19 @@
 class MovieDecorator < Draper::Decorator
   delegate_all
 
-  def extra_info
-    @extra_info ||= PairguruApiHandler.new(object.title)
+  def pairguru_api_info
+    @pairguru_api_info ||= PairguruApiHandler.new(object.title)
   end
 
   def cover
-    extra_info.cover
+    pairguru_api_info.cover
   end
 
   def plot
-    extra_info.plot
+    pairguru_api_info.plot
   end
 
   def rating
-    extra_info.rating
+    pairguru_api_info.rating
   end
 end

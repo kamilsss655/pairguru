@@ -4,6 +4,7 @@ class PairguruApiHandler
   default_timeout 1
   base_uri "https://pairguru-api.herokuapp.com/api/v1/movies"
   COVER_URI = "https://pairguru-api.herokuapp.com".freeze
+  CACHE_EXPIRATION_IN_MIN = 30
 
   def initialize(movie_title)
     @movie_title = movie_title
@@ -27,9 +28,15 @@ class PairguruApiHandler
 
   # API call memoization to make sure we call API once per movie
   def api_response
-    cache_key = "pairguru_api_response_#{@movie_title}"
-    @api_response ||= Rails.cache.fetch(cache_key, expires_in: 30.seconds) do
+    @api_response ||= cached do
       handle_errors { api_call.parsed_response }
+    end
+  end
+
+  def cached
+    cache_key = "pairguru_api_response_#{@movie_title}"
+    Rails.cache.fetch(cache_key, expires_in: CACHE_EXPIRATION_IN_MIN.minutes) do
+      yield
     end
   end
 

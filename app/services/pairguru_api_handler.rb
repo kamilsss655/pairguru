@@ -27,7 +27,10 @@ class PairguruApiHandler
 
   # API call memoization to make sure we call API once per movie
   def api_response
-    @api_response ||= handle_errors { api_call.parsed_response }
+    cache_key = "pairguru_api_response_#{@movie_title}"
+    @api_response ||= Rails.cache.fetch(cache_key, expires_in: 30.seconds) do
+      handle_errors { api_call.parsed_response }
+    end
   end
 
   def api_call
